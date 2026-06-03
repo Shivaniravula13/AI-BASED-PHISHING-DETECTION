@@ -1,0 +1,27 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.backend
+    container_name: phishguard_backend
+    working_dir: /app
+    volumes:
+      - backend_data:/app/backend
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=sqlite:////app/backend/phishguard.db
+      - SECRET_KEY=prod-secret-phishguard-key-replace-in-env-settings
+    restart: always
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.frontend
+    container_name: phishguard_frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    restart: always
+volumes:
+  backend_data:
